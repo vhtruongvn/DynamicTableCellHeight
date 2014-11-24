@@ -28,8 +28,10 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
     
     self.title = @"Welcome";
     
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     self.refreshControl = [[[UIRefreshControl alloc] init] autorelease];
-    self.refreshControl.backgroundColor = [UIColor colorWithRed:142/255.0f green:68/255.0f blue:173/255.0f alpha:1];
+    self.refreshControl.backgroundColor = [UIColor colorWithRed:149/255.0f green:165/255.0f blue:166/255.0f alpha:1];
     self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(downloadData) forControlEvents:UIControlEventValueChanged];
     
@@ -59,8 +61,8 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 
 - (void)errorButtonTapped:(id)sender
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:@"Unable to refresh. Please pull down to try again."
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                    message:@"Unable to refresh. Please try again."
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
@@ -105,8 +107,8 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 - (void)configureBasicCell:(BasicCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     Article *article = _articles[indexPath.row];
-    NSString *title = [NSString stringWithFormat:@"%@", article.articleTitle];
-    NSString *description = [NSString stringWithFormat:@"%@", article.articleDescription];
+    NSString *title = [NSString stringWithFormat:@"%@", [article.articleTitle isKindOfClass:[NSString class]] ? article.articleTitle : @"No Title"];
+    NSString *description = [NSString stringWithFormat:@"%@", [article.articleDescription isKindOfClass:[NSString class]] ? article.articleDescription : @"No Description"];
     
     cell.titleLabel.text = title;
     cell.descriptionLabel.text = description;
@@ -124,8 +126,8 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 - (void)configureImageCell:(ImageCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     Article *article = _articles[indexPath.row];
-    NSString *title = [NSString stringWithFormat:@"%@", article.articleTitle];
-    NSString *description = [NSString stringWithFormat:@"%@", article.articleDescription];
+    NSString *title = [NSString stringWithFormat:@"%@", [article.articleTitle isKindOfClass:[NSString class]] ? article.articleTitle : @"No Title"];
+    NSString *description = [NSString stringWithFormat:@"%@", [article.articleDescription isKindOfClass:[NSString class]] ? article.articleDescription : @"No Description"];
     
     cell.titleLabel.text = title;
     cell.descriptionLabel.text = description;
@@ -232,14 +234,30 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
             NSLog(@"%@", jsonError);
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *buttonImage = [UIImage imageNamed:@"Error"];
-                UIButton *errorButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                [errorButton setImage:buttonImage forState:UIControlStateNormal];
-                [errorButton setImage:buttonImage forState:UIControlStateHighlighted];
-                [errorButton addTarget:self action:@selector(errorButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-                errorButton.frame = CGRectMake(0.0, 0.0, buttonImage.size.width, buttonImage.size.height);
-                UIBarButtonItem *settingsBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:errorButton] autorelease];
-                self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
+                // Show error button
+                if (downloadError || jsonError)
+                {
+                    UIImage *buttonImage = [UIImage imageNamed:@"Error"];
+                    UIButton *errorButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [errorButton setImage:buttonImage forState:UIControlStateNormal];
+                    [errorButton setImage:buttonImage forState:UIControlStateHighlighted];
+                    [errorButton addTarget:self action:@selector(errorButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+                    errorButton.frame = CGRectMake(0.0, 0.0, buttonImage.size.width, buttonImage.size.height);
+                    UIBarButtonItem *settingsBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:errorButton] autorelease];
+                    self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
+                }
+                
+                // Display a message when the table is empty
+                UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+                messageLabel.text = @"No data is currently available.\nPlease pull down to refresh.";
+                messageLabel.textColor = [UIColor colorWithRed:127/255.0f green:140/255.0f blue:141/255.0f alpha:1];
+                messageLabel.numberOfLines = 0;
+                messageLabel.textAlignment = NSTextAlignmentCenter;
+                messageLabel.font = [UIFont boldSystemFontOfSize:20];
+                [messageLabel sizeToFit];
+                self.tableView.backgroundView = messageLabel;
+                self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                [messageLabel release];
             });
         }
         else
@@ -279,21 +297,27 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
             NSLog(@"%@", _articles);
             
             dispatch_async(dispatch_get_main_queue(), ^{
+                // Remove error button
+                self.navigationItem.rightBarButtonItem = nil;
+                
                 // Reload table data
+                self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
                 [self.tableView reloadData];
-
-                // End refreshing
-                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                [formatter setDateFormat:@"MMM d, h:mm a"];
-                NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
-                NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
-                NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-                self.refreshControl.attributedTitle = attributedTitle;
-                [self.refreshControl endRefreshing];
-                [attributedTitle release];
-                [formatter release];
             });
         }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // End refreshing
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"MMM d, h:mm a"];
+            NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+            NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+            NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+            self.refreshControl.attributedTitle = attributedTitle;
+            [self.refreshControl endRefreshing];
+            [attributedTitle release];
+            [formatter release];
+        });
     });
 }
 

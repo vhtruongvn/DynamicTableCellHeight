@@ -71,7 +71,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="03E-6v-tr2">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder1" translatesAutoresizingMaskIntoConstraints="NO" id="03E-6v-tr2">
                                             <rect key="frame" x="528" y="41" width="64" height="64"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="999" constant="64" id="ah3-0J-Qvd"/>
@@ -144,6 +144,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Placeholder" width="64" height="64"/>
+        <image name="Placeholder1" width="64" height="64"/>
     </resources>
 </document>
