@@ -17,6 +17,7 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 @interface ViewController ()
 {
     NSMutableArray *_articles;
+    NSMutableDictionary *_imagesCache;
 }
 @end
 
@@ -36,6 +37,7 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
     [self.refreshControl addTarget:self action:@selector(downloadData) forControlEvents:UIControlEventValueChanged];
     
     _articles = [[NSMutableArray alloc] init];
+    _imagesCache = [[NSMutableDictionary alloc] init];
     
     [self downloadData];
 }
@@ -47,6 +49,7 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 
 - (void)didReceiveMemoryWarning
 {
+    [_imagesCache removeAllObjects];
     [super didReceiveMemoryWarning];
 }
 
@@ -54,6 +57,7 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 {
     self.refreshControl = nil;
     [_articles release];
+    [_imagesCache release];
     [super dealloc];
 }
 
@@ -126,11 +130,49 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 - (void)configureImageCell:(ImageCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     Article *article = _articles[indexPath.row];
-    NSString *title = [NSString stringWithFormat:@"%@", [article.articleTitle isKindOfClass:[NSString class]] ? article.articleTitle : @"No Title"];
-    NSString *description = [NSString stringWithFormat:@"%@", [article.articleDescription isKindOfClass:[NSString class]] ? article.articleDescription : @"No Description"];
+    NSString *title = [article.articleTitle isKindOfClass:[NSString class]] ? article.articleTitle : @"No Title";
+    NSString *description = [article.articleDescription isKindOfClass:[NSString class]] ? article.articleDescription : @"No Description";
+    NSString *photoURLString = [article.imageHref isKindOfClass:[NSString class]] ? article.imageHref : nil;
     
     cell.titleLabel.text = title;
     cell.descriptionLabel.text = description;
+    
+    if (article.hasPhoto && photoURLString != nil)
+    {
+        UIImage *cachedImage = [_imagesCache objectForKey:photoURLString];
+        if (cachedImage)
+        {
+            [cell.photoView setImage:[_imagesCache valueForKey:photoURLString]];
+            [cell setNeedsLayout];
+        }
+        else
+        {
+            //if (!self.tableView.dragging && !self.tableView.decelerating)
+            {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]];
+                    UIImage *downloadedImage = [[UIImage alloc] initWithData:imageData];
+                    if (downloadedImage)
+                    {
+                        [_imagesCache setObject:[UIImage imageWithData:imageData] forKey:photoURLString];
+                    }
+                    else
+                    {
+                        article.hasPhoto = NO;
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    });
+                });
+            }
+        }
+    }
+    else
+    {
+        article.hasPhoto = NO;
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 #pragma mark - UITableViewDelegate
@@ -207,7 +249,7 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
     [self.refreshControl beginRefreshing];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-        NSError *downloadError = nil;
+        /*NSError *downloadError = nil;
         NSURL *url = [NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/746330/facts.json"];
         NSString *responseString = [NSString stringWithContentsOfURL:url encoding:NSISOLatin1StringEncoding error:&downloadError];
         NSData *responseData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
@@ -218,15 +260,16 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
             json = [NSJSONSerialization JSONObjectWithData:responseData
                                                                  options:0
                                                                    error:&jsonError];
-        }
+        }*/
         
         // Load data from local file (for Testing only)
-        /*NSError *error;
-        NSString *responseString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"facts" ofType:@"json"] encoding:NSISOLatin1StringEncoding error:&error];
+        NSError *downloadError;
+        NSString *responseString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"facts" ofType:@"json"] encoding:NSISOLatin1StringEncoding error:&downloadError];
         NSData *responseData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *jsonError = nil;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData
                                                              options:0
-                                                               error:&error];*/
+                                                               error:&jsonError];
         
         if (json == nil)
         {
