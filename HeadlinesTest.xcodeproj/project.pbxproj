@@ -14,6 +14,10 @@
 		1BEE8BD91A22D9C300A2D680 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BEE8BD81A22D9C300A2D680 /* Images.xcassets */; };
 		1BEE8BDC1A22D9C300A2D680 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BEE8BDA1A22D9C300A2D680 /* LaunchScreen.xib */; };
 		1BEE8BE81A22D9C300A2D680 /* HeadlinesTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8BE71A22D9C300A2D680 /* HeadlinesTestTests.m */; };
+		1BEE8C091A2310BE00A2D680 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8C081A2310BE00A2D680 /* Article.m */; };
+		1BEE8C0C1A23126600A2D680 /* BasicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8C0B1A23126600A2D680 /* BasicCell.m */; };
+		1BEE8C0E1A23151900A2D680 /* facts.json in Resources */ = {isa = PBXBuildFile; fileRef = 1BEE8C0D1A23151900A2D680 /* facts.json */; };
+		1BEE8C111A2321C200A2D680 /* ImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8C101A2321C200A2D680 /* ImageCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +44,13 @@
 		1BEE8BE11A22D9C300A2D680 /* HeadlinesTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HeadlinesTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BEE8BE61A22D9C300A2D680 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BEE8BE71A22D9C300A2D680 /* HeadlinesTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeadlinesTestTests.m; sourceTree = "<group>"; };
+		1BEE8C071A2310BE00A2D680 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
+		1BEE8C081A2310BE00A2D680 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
+		1BEE8C0A1A23126600A2D680 /* BasicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicCell.h; sourceTree = "<group>"; };
+		1BEE8C0B1A23126600A2D680 /* BasicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicCell.m; sourceTree = "<group>"; };
+		1BEE8C0D1A23151900A2D680 /* facts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = facts.json; sourceTree = "<group>"; };
+		1BEE8C0F1A2321C200A2D680 /* ImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCell.h; sourceTree = "<group>"; };
+		1BEE8C101A2321C200A2D680 /* ImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +96,12 @@
 				1BEE8BD01A22D9C300A2D680 /* AppDelegate.m */,
 				1BEE8BD21A22D9C300A2D680 /* ViewController.h */,
 				1BEE8BD31A22D9C300A2D680 /* ViewController.m */,
+				1BEE8C071A2310BE00A2D680 /* Article.h */,
+				1BEE8C081A2310BE00A2D680 /* Article.m */,
+				1BEE8C0A1A23126600A2D680 /* BasicCell.h */,
+				1BEE8C0B1A23126600A2D680 /* BasicCell.m */,
+				1BEE8C0F1A2321C200A2D680 /* ImageCell.h */,
+				1BEE8C101A2321C200A2D680 /* ImageCell.m */,
 				1BEE8BD51A22D9C300A2D680 /* Main.storyboard */,
 				1BEE8BD81A22D9C300A2D680 /* Images.xcassets */,
 				1BEE8BDA1A22D9C300A2D680 /* LaunchScreen.xib */,
@@ -96,6 +113,7 @@
 		1BEE8BCB1A22D9C300A2D680 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1BEE8C0D1A23151900A2D680 /* facts.json */,
 				1BEE8BCC1A22D9C300A2D680 /* Info.plist */,
 				1BEE8BCD1A22D9C300A2D680 /* main.m */,
 			);
@@ -202,6 +220,7 @@
 				1BEE8BD71A22D9C300A2D680 /* Main.storyboard in Resources */,
 				1BEE8BDC1A22D9C300A2D680 /* LaunchScreen.xib in Resources */,
 				1BEE8BD91A22D9C300A2D680 /* Images.xcassets in Resources */,
+				1BEE8C0E1A23151900A2D680 /* facts.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,8 +238,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BEE8C091A2310BE00A2D680 /* Article.m in Sources */,
+				1BEE8C111A2321C200A2D680 /* ImageCell.m in Sources */,
 				1BEE8BD41A22D9C300A2D680 /* ViewController.m in Sources */,
 				1BEE8BD11A22D9C300A2D680 /* AppDelegate.m in Sources */,
+				1BEE8C0C1A23126600A2D680 /* BasicCell.m in Sources */,
 				1BEE8BCE1A22D9C300A2D680 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,6 +367,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				INFOPLIST_FILE = HeadlinesTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -356,6 +379,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				INFOPLIST_FILE = HeadlinesTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
