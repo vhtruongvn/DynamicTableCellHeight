@@ -334,6 +334,7 @@ static NSString *kImageCellIdentifier = @"ImageCell";
                         article.hasPhoto = YES; // this field will be updated after photo is downloaded
                         
                         [_articles addObject:article];
+                        
                         [article release];
                     }
                 }
@@ -424,8 +425,6 @@ static NSString *kImageCellIdentifier = @"ImageCell";
         NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
         for (NSIndexPath *indexPath in visiblePaths)
         {
-            NSLog(@"%d is visible", indexPath.row);
-            
             Article *article = _articles[indexPath.row];
             if (article.hasPhoto && !article.articlePhoto) // Avoid re-downloading
             {

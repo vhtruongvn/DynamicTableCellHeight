@@ -34,6 +34,12 @@
     self.activeDownload = nil;
 }
 
+- (void)dealloc
+{
+    [self cancelDownload];
+    [super dealloc];
+}
+
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
