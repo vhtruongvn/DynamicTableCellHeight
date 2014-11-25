@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B69DB351A242F0D004A7438 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B69DB341A242F0D004A7438 /* Foundation.framework */; };
+		1B69DB371A242F13004A7438 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B69DB361A242F13004A7438 /* UIKit.framework */; };
+		1B69DB391A242F1A004A7438 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B69DB381A242F1A004A7438 /* CoreGraphics.framework */; };
+		1B69DB3D1A2432A0004A7438 /* ImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B69DB3C1A2432A0004A7438 /* ImageDownloader.m */; };
 		1BEE8BCE1A22D9C300A2D680 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8BCD1A22D9C300A2D680 /* main.m */; };
 		1BEE8BD11A22D9C300A2D680 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8BD01A22D9C300A2D680 /* AppDelegate.m */; };
 		1BEE8BD41A22D9C300A2D680 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8BD31A22D9C300A2D680 /* ViewController.m */; };
@@ -30,6 +34,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B69DB331A242E90004A7438 /* HeadlinesTest-prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HeadlinesTest-prefix.pch"; sourceTree = "<group>"; };
+		1B69DB341A242F0D004A7438 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1B69DB361A242F13004A7438 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1B69DB381A242F1A004A7438 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		1B69DB3B1A2432A0004A7438 /* ImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDownloader.h; sourceTree = "<group>"; };
+		1B69DB3C1A2432A0004A7438 /* ImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDownloader.m; sourceTree = "<group>"; };
 		1BEE8BC81A22D9C300A2D680 /* HeadlinesTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadlinesTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BEE8BCC1A22D9C300A2D680 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BEE8BCD1A22D9C300A2D680 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -56,6 +66,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B69DB391A242F1A004A7438 /* CoreGraphics.framework in Frameworks */,
+				1B69DB371A242F13004A7438 /* UIKit.framework in Frameworks */,
+				1B69DB351A242F0D004A7438 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,11 +82,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B69DB3A1A242F1F004A7438 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1B69DB381A242F1A004A7438 /* CoreGraphics.framework */,
+				1B69DB361A242F13004A7438 /* UIKit.framework */,
+				1B69DB341A242F0D004A7438 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1BEE8BBF1A22D9C300A2D680 = {
 			isa = PBXGroup;
 			children = (
 				1BEE8BCA1A22D9C300A2D680 /* HeadlinesTest */,
 				1BEE8BE41A22D9C300A2D680 /* HeadlinesTestTests */,
+				1B69DB3A1A242F1F004A7438 /* Frameworks */,
 				1BEE8BC91A22D9C300A2D680 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,12 +118,14 @@
 				1BEE8BD01A22D9C300A2D680 /* AppDelegate.m */,
 				1BEE8BD21A22D9C300A2D680 /* ViewController.h */,
 				1BEE8BD31A22D9C300A2D680 /* ViewController.m */,
-				1BEE8C071A2310BE00A2D680 /* Article.h */,
-				1BEE8C081A2310BE00A2D680 /* Article.m */,
 				1BEE8C0A1A23126600A2D680 /* BasicCell.h */,
 				1BEE8C0B1A23126600A2D680 /* BasicCell.m */,
 				1BEE8C0F1A2321C200A2D680 /* ImageCell.h */,
 				1BEE8C101A2321C200A2D680 /* ImageCell.m */,
+				1BEE8C071A2310BE00A2D680 /* Article.h */,
+				1BEE8C081A2310BE00A2D680 /* Article.m */,
+				1B69DB3B1A2432A0004A7438 /* ImageDownloader.h */,
+				1B69DB3C1A2432A0004A7438 /* ImageDownloader.m */,
 				1BEE8BD51A22D9C300A2D680 /* Main.storyboard */,
 				1BEE8BD81A22D9C300A2D680 /* Images.xcassets */,
 				1BEE8BCB1A22D9C300A2D680 /* Supporting Files */,
@@ -113,6 +139,7 @@
 				1BEE8C0D1A23151900A2D680 /* facts.json */,
 				1BEE8BCC1A22D9C300A2D680 /* Info.plist */,
 				1BEE8BCD1A22D9C300A2D680 /* main.m */,
+				1B69DB331A242E90004A7438 /* HeadlinesTest-prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -239,6 +266,7 @@
 				1BEE8BD41A22D9C300A2D680 /* ViewController.m in Sources */,
 				1BEE8BD11A22D9C300A2D680 /* AppDelegate.m in Sources */,
 				1BEE8C0C1A23126600A2D680 /* BasicCell.m in Sources */,
+				1B69DB3D1A2432A0004A7438 /* ImageDownloader.m in Sources */,
 				1BEE8BCE1A22D9C300A2D680 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,7 +384,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_NOTICES = NO;
+				ASSETCATALOG_WARNINGS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HeadlinesTest/HeadlinesTest-prefix.pch";
 				INFOPLIST_FILE = HeadlinesTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -369,7 +401,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_NOTICES = NO;
+				ASSETCATALOG_WARNINGS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HeadlinesTest/HeadlinesTest-prefix.pch";
 				INFOPLIST_FILE = HeadlinesTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

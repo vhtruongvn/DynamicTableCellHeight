@@ -10,7 +10,7 @@
         <scene sceneID="zAx-ym-4RU">
             <objects>
                 <tableViewController id="bDT-17-5H5" customClass="ViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="110" sectionHeaderHeight="22" sectionFooterHeight="22" id="pHm-Qj-onH">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="110" sectionHeaderHeight="22" sectionFooterHeight="22" id="pHm-Qj-onH">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -71,7 +71,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder1" translatesAutoresizingMaskIntoConstraints="NO" id="03E-6v-tr2">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="03E-6v-tr2">
                                             <rect key="frame" x="495" y="41" width="64" height="64"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="999" constant="64" id="ah3-0J-Qvd"/>
@@ -144,6 +144,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Placeholder1" width="64" height="64"/>
+        <image name="Placeholder" width="48" height="48"/>
     </resources>
 </document>

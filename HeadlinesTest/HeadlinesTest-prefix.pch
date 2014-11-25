@@ -1,0 +1,22 @@
+//
+//  HeadlinesTest-prefix.pch
+//  HeadlinesTest
+//
+//  Created by Ray Vo on 25/11/14.
+//  Copyright (c) 2014 Truong Vo. All rights reserved.
+//
+
+//
+// Prefix header for all source files of the 'HeadlinesTest' target in the 'HeadlinesTest' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_6_0
+    #warning "This project uses features only available in iOS SDK 6.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+#endif

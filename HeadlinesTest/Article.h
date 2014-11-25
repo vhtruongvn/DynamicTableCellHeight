@@ -10,9 +10,10 @@
 
 @interface Article : NSObject
 
-@property (retain) NSString *articleTitle;
-@property (retain) NSString *articleDescription;
-@property (retain) NSString *imageHref;
-@property (assign) BOOL hasPhoto;
+@property (nonatomic, retain) NSString *articleTitle;
+@property (nonatomic, retain) NSString *articleDescription;
+@property (nonatomic, retain) NSString *imageHref;
+@property (nonatomic, retain) UIImage *articlePhoto;
+@property (nonatomic, assign) BOOL hasPhoto;
 
 @end

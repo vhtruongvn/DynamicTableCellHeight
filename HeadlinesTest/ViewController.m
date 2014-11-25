@@ -10,14 +10,15 @@
 #import "Article.h"
 #import "BasicCell.h"
 #import "ImageCell.h"
+#import "ImageDownloader.h"
 
-static NSString * const kBasicCellIdentifier = @"BasicCell";
-static NSString * const kImageCellIdentifier = @"ImageCell";
+static NSString *kBasicCellIdentifier = @"BasicCell";
+static NSString *kImageCellIdentifier = @"ImageCell";
 
 @interface ViewController ()
 {
     NSMutableArray *_articles;
-    NSMutableDictionary *_imagesCache;
+    NSMutableDictionary *_imageDownloadingsList;
 }
 @end
 
@@ -37,7 +38,7 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
     [self.refreshControl addTarget:self action:@selector(downloadData) forControlEvents:UIControlEventValueChanged];
     
     _articles = [[NSMutableArray alloc] init];
-    _imagesCache = [[NSMutableDictionary alloc] init];
+    _imageDownloadingsList = [[NSMutableDictionary alloc] init];
     
     [self downloadData];
 }
@@ -49,15 +50,18 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 
 - (void)didReceiveMemoryWarning
 {
-    [_imagesCache removeAllObjects];
     [super didReceiveMemoryWarning];
+    
+    [self terminateAllPhotoDownloads];
 }
 
 - (void)dealloc
 {
     self.refreshControl = nil;
     [_articles release];
-    [_imagesCache release];
+    [self terminateAllPhotoDownloads];
+    [_imageDownloadingsList release];
+    
     [super dealloc];
 }
 
@@ -137,40 +141,35 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
     cell.titleLabel.text = title;
     cell.descriptionLabel.text = description;
     
-    if (article.hasPhoto && photoURLString != nil)
+    if (photoURLString)
     {
-        UIImage *cachedImage = [_imagesCache objectForKey:photoURLString];
-        if (cachedImage)
+        NSLog(@"1a. [%@] has photo url", article.articleTitle);
+        
+        if (article.articlePhoto)
         {
-            [cell.photoView setImage:[_imagesCache valueForKey:photoURLString]];
-            [cell setNeedsLayout];
+            NSLog(@"2a. [%@] load photo from cache", article.articleTitle);
+            
+            [cell.photoView setImage:article.articlePhoto];
         }
         else
         {
-            //if (!self.tableView.dragging && !self.tableView.decelerating)
+            NSLog(@"2b. [%@] start downloading photo", article.articleTitle);
+            
+            if (!self.tableView.isDragging && !self.tableView.isDecelerating)
             {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]];
-                    UIImage *downloadedImage = [[UIImage alloc] initWithData:imageData];
-                    if (downloadedImage)
-                    {
-                        [_imagesCache setObject:[UIImage imageWithData:imageData] forKey:photoURLString];
-                    }
-                    else
-                    {
-                        article.hasPhoto = NO;
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                    });
-                });
+                [self startDownloadPhoto:article forIndexPath:indexPath];
             }
+            
+            // Show a placeholder image while downloading photo
+            cell.photoView.image = [UIImage imageNamed:@"Placeholder"];
         }
     }
     else
     {
+        NSLog(@"1b. [%@] has no photo", article.articleTitle);
+        
         article.hasPhoto = NO;
+        
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
@@ -188,11 +187,6 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
     {
         return [self heightForBasicCellAtIndexPath:indexPath];
     }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 120.0f;
 }
 
 - (CGFloat)heightForBasicCellAtIndexPath:(NSIndexPath *)indexPath
@@ -230,11 +224,21 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     // User stopped dragging the table view
+    if (!decelerate)
+    {
+        [self loadImagesForOnscreenRows];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     // The table view stopped scrolling
+    [self loadImagesForOnscreenRows];
 }
 
 #pragma mark - Private Methods
@@ -307,6 +311,8 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
         {
             NSLog(@"%@", json);
             
+            // Force refreshing
+            [self terminateAllPhotoDownloads];
             [_articles removeAllObjects];
             
             if (json)
@@ -364,9 +370,64 @@ static NSString * const kImageCellIdentifier = @"ImageCell";
     });
 }
 
-- (BOOL)isLandscapeOrientation
+#pragma mark - Table cell image support
+
+- (void)terminateAllPhotoDownloads
 {
-    return UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
+    // Terminate all pending download connections
+    NSArray *allDownloads = [_imageDownloadingsList allValues];
+    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
+    
+    [_imageDownloadingsList removeAllObjects];
+}
+
+- (void)startDownloadPhoto:(Article *)article forIndexPath:(NSIndexPath *)indexPath
+{
+    ImageDownloader *imageDownloader = _imageDownloadingsList[indexPath];
+    if (imageDownloader == nil)
+    {
+        imageDownloader = [[ImageDownloader alloc] init];
+        imageDownloader.article = article;
+        [imageDownloader setCompletionHandler:^{
+            if (article.articlePhoto)
+            {
+                // Display the newly downloaded image
+                ImageCell *cell = (ImageCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+                cell.photoView.image = article.articlePhoto;
+            }
+            else
+            {
+                // Downloaded photo is broken
+                article.hasPhoto = NO;
+                
+                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            }
+            
+            // Remove the ImageDownloader from the in progress list.
+            // This will result in it being deallocated.
+            [_imageDownloadingsList removeObjectForKey:indexPath];
+            
+        }];
+        _imageDownloadingsList[indexPath] = imageDownloader;
+        [imageDownloader startDownload];
+    }
+}
+
+- (void)loadImagesForOnscreenRows
+{
+    if (_articles.count > 0)
+    {
+        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            Article *article = _articles[indexPath.row];
+            
+            if (article.hasPhoto && !article.articlePhoto) // Avoid re-downloading
+            {
+                [self startDownloadPhoto:article forIndexPath:indexPath];
+            }
+        }
+    }
 }
 
 @end

@@ -15,6 +15,7 @@
     [_articleTitle release];
     [_articleDescription release];
     [_imageHref release];
+    [_articlePhoto release];
     [super dealloc];
 }
 
