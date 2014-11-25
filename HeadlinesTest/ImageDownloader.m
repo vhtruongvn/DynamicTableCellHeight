@@ -37,6 +37,7 @@
 - (void)dealloc
 {
     [self cancelDownload];
+    [_article release];
     [super dealloc];
 }
 
