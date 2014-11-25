@@ -143,30 +143,26 @@ static NSString *kImageCellIdentifier = @"ImageCell";
     
     if (photoURLString)
     {
-        NSLog(@"1a. [%@] has photo url", article.articleTitle);
+        NSLog(@"--- [%@] has photo url", article.articleTitle);
         
         if (article.articlePhoto)
         {
-            NSLog(@"2a. [%@] load photo from cache", article.articleTitle);
+            NSLog(@"--- [%@] load photo from cache", article.articleTitle);
             
             [cell.photoView setImage:article.articlePhoto];
         }
         else
         {
-            NSLog(@"2b. [%@] start downloading photo", article.articleTitle);
-            
-            if (!self.tableView.isDragging && !self.tableView.isDecelerating)
-            {
-                [self startDownloadPhoto:article forIndexPath:indexPath];
-            }
-            
-            // Show a placeholder image while downloading photo
+            // Show a placeholder image first
+            // Only download photo when:
+            // 1. User stopped dragging the table view
+            // 2. The table view stopped scrolling
             cell.photoView.image = [UIImage imageNamed:@"Placeholder"];
         }
     }
     else
     {
-        NSLog(@"1b. [%@] has no photo", article.articleTitle);
+        NSLog(@"--- [%@] has no photo", article.articleTitle);
         
         article.hasPhoto = NO;
         
@@ -241,7 +237,7 @@ static NSString *kImageCellIdentifier = @"ImageCell";
     [self loadImagesForOnscreenRows];
 }
 
-#pragma mark - Private Methods
+#pragma mark - Data & Image Download Methods
 
 - (void)downloadData
 {
@@ -253,7 +249,7 @@ static NSString *kImageCellIdentifier = @"ImageCell";
     [self.refreshControl beginRefreshing];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-        /*NSError *downloadError = nil;
+        NSError *downloadError = nil;
         NSURL *url = [NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/746330/facts.json"];
         NSString *responseString = [NSString stringWithContentsOfURL:url encoding:NSISOLatin1StringEncoding error:&downloadError];
         NSData *responseData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
@@ -264,16 +260,16 @@ static NSString *kImageCellIdentifier = @"ImageCell";
             json = [NSJSONSerialization JSONObjectWithData:responseData
                                                                  options:0
                                                                    error:&jsonError];
-        }*/
+        }
         
         // Load data from local file (for Testing only)
-        NSError *downloadError;
+        /*NSError *downloadError;
         NSString *responseString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"facts" ofType:@"json"] encoding:NSISOLatin1StringEncoding error:&downloadError];
         NSData *responseData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
         NSError *jsonError = nil;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData
                                                              options:0
-                                                               error:&jsonError];
+                                                               error:&jsonError];*/
         
         if (json == nil)
         {
@@ -335,7 +331,7 @@ static NSString *kImageCellIdentifier = @"ImageCell";
                         article.articleTitle = articleData[@"title"];
                         article.articleDescription = articleData[@"description"];
                         article.imageHref = articleData[@"imageHref"];
-                        article.hasPhoto = YES; // Assume article has photo and the photo is valid
+                        article.hasPhoto = YES; // this field will be updated after photo is downloaded
                         
                         [_articles addObject:article];
                         [article release];
@@ -351,7 +347,11 @@ static NSString *kImageCellIdentifier = @"ImageCell";
                 
                 // Reload table data
                 self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                self.tableView.backgroundView = nil;
                 [self.tableView reloadData];
+                
+                // Load photos for visible rows
+                [self loadImagesForOnscreenRows];
             });
         }
         
@@ -370,8 +370,6 @@ static NSString *kImageCellIdentifier = @"ImageCell";
     });
 }
 
-#pragma mark - Table cell image support
-
 - (void)terminateAllPhotoDownloads
 {
     // Terminate all pending download connections
@@ -384,8 +382,10 @@ static NSString *kImageCellIdentifier = @"ImageCell";
 - (void)startDownloadPhoto:(Article *)article forIndexPath:(NSIndexPath *)indexPath
 {
     ImageDownloader *imageDownloader = _imageDownloadingsList[indexPath];
-    if (imageDownloader == nil)
+    if (imageDownloader == nil) // Avoid re-downloading
     {
+        NSLog(@"--- [%@] start downloading photo", article.articleTitle);
+        
         imageDownloader = [[ImageDownloader alloc] init];
         imageDownloader.article = article;
         [imageDownloader setCompletionHandler:^{
@@ -411,6 +411,10 @@ static NSString *kImageCellIdentifier = @"ImageCell";
         _imageDownloadingsList[indexPath] = imageDownloader;
         [imageDownloader startDownload];
     }
+    else
+    {
+        NSLog(@"--- [%@] is downloading photo", article.articleTitle);
+    }
 }
 
 - (void)loadImagesForOnscreenRows
@@ -420,8 +424,9 @@ static NSString *kImageCellIdentifier = @"ImageCell";
         NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
         for (NSIndexPath *indexPath in visiblePaths)
         {
-            Article *article = _articles[indexPath.row];
+            NSLog(@"%d is visible", indexPath.row);
             
+            Article *article = _articles[indexPath.row];
             if (article.hasPhoto && !article.articlePhoto) // Avoid re-downloading
             {
                 [self startDownloadPhoto:article forIndexPath:indexPath];
