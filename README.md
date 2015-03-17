@@ -1,8 +1,5 @@
-HeadlinesTest
-=============
-
 # Intro
-This project demonstrates who to implement:
+### This project demonstrates:
 ###### A dynamic cell height table view with storyboard and autolayout
 ###### A basic asynchronous image downloader (loads the images lazily)
 ###### Use GCD and Non-ARC
