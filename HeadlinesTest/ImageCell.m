@@ -17,4 +17,5 @@
     self.photoView = nil;
     [super dealloc];
 }
+
 @end

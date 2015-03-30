@@ -11,6 +11,7 @@
 		1B69DB371A242F13004A7438 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B69DB361A242F13004A7438 /* UIKit.framework */; };
 		1B69DB391A242F1A004A7438 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B69DB381A242F1A004A7438 /* CoreGraphics.framework */; };
 		1B69DB3D1A2432A0004A7438 /* ImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B69DB3C1A2432A0004A7438 /* ImageDownloader.m */; };
+		1BC2B5801AC99F17003C5216 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BC2B57F1AC99F17003C5216 /* DetailsViewController.m */; };
 		1BEE8BCE1A22D9C300A2D680 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8BCD1A22D9C300A2D680 /* main.m */; };
 		1BEE8BD11A22D9C300A2D680 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8BD01A22D9C300A2D680 /* AppDelegate.m */; };
 		1BEE8BD41A22D9C300A2D680 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEE8BD31A22D9C300A2D680 /* ViewController.m */; };
@@ -40,6 +41,8 @@
 		1B69DB381A242F1A004A7438 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1B69DB3B1A2432A0004A7438 /* ImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDownloader.h; sourceTree = "<group>"; };
 		1B69DB3C1A2432A0004A7438 /* ImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDownloader.m; sourceTree = "<group>"; };
+		1BC2B57E1AC99F17003C5216 /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
+		1BC2B57F1AC99F17003C5216 /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 		1BEE8BC81A22D9C300A2D680 /* HeadlinesTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadlinesTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BEE8BCC1A22D9C300A2D680 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BEE8BCD1A22D9C300A2D680 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -92,6 +95,39 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		1BC2B5811AC99F24003C5216 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				1BEE8BD21A22D9C300A2D680 /* ViewController.h */,
+				1BEE8BD31A22D9C300A2D680 /* ViewController.m */,
+				1BEE8C0A1A23126600A2D680 /* BasicCell.h */,
+				1BEE8C0B1A23126600A2D680 /* BasicCell.m */,
+				1BEE8C0F1A2321C200A2D680 /* ImageCell.h */,
+				1BEE8C101A2321C200A2D680 /* ImageCell.m */,
+				1BC2B57E1AC99F17003C5216 /* DetailsViewController.h */,
+				1BC2B57F1AC99F17003C5216 /* DetailsViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		1BC2B5821AC99F2D003C5216 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1BEE8C071A2310BE00A2D680 /* Article.h */,
+				1BEE8C081A2310BE00A2D680 /* Article.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		1BC2B5831AC99F4F003C5216 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1B69DB3B1A2432A0004A7438 /* ImageDownloader.h */,
+				1B69DB3C1A2432A0004A7438 /* ImageDownloader.m */,
+			);
+			name = Helper;
+			sourceTree = "<group>";
+		};
 		1BEE8BBF1A22D9C300A2D680 = {
 			isa = PBXGroup;
 			children = (
@@ -116,17 +152,10 @@
 			children = (
 				1BEE8BCF1A22D9C300A2D680 /* AppDelegate.h */,
 				1BEE8BD01A22D9C300A2D680 /* AppDelegate.m */,
-				1BEE8BD21A22D9C300A2D680 /* ViewController.h */,
-				1BEE8BD31A22D9C300A2D680 /* ViewController.m */,
-				1BEE8C0A1A23126600A2D680 /* BasicCell.h */,
-				1BEE8C0B1A23126600A2D680 /* BasicCell.m */,
-				1BEE8C0F1A2321C200A2D680 /* ImageCell.h */,
-				1BEE8C101A2321C200A2D680 /* ImageCell.m */,
-				1BEE8C071A2310BE00A2D680 /* Article.h */,
-				1BEE8C081A2310BE00A2D680 /* Article.m */,
-				1B69DB3B1A2432A0004A7438 /* ImageDownloader.h */,
-				1B69DB3C1A2432A0004A7438 /* ImageDownloader.m */,
 				1BEE8BD51A22D9C300A2D680 /* Main.storyboard */,
+				1BC2B5831AC99F4F003C5216 /* Helper */,
+				1BC2B5821AC99F2D003C5216 /* Model */,
+				1BC2B5811AC99F24003C5216 /* Controller */,
 				1BEE8BD81A22D9C300A2D680 /* Images.xcassets */,
 				1BEE8BCB1A22D9C300A2D680 /* Supporting Files */,
 			);
@@ -268,6 +297,7 @@
 				1BEE8C0C1A23126600A2D680 /* BasicCell.m in Sources */,
 				1B69DB3D1A2432A0004A7438 /* ImageDownloader.m in Sources */,
 				1BEE8BCE1A22D9C300A2D680 /* main.m in Sources */,
+				1BC2B5801AC99F17003C5216 /* DetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

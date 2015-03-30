@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "DetailsViewController.h"
 #import "Article.h"
 #import "BasicCell.h"
 #import "ImageCell.h"
@@ -19,6 +20,7 @@ static NSString *kImageCellIdentifier = @"ImageCell";
 {
     NSMutableArray *_articles;
     NSMutableDictionary *_imageDownloadingsList;
+    Article *_selectedArticle;
 }
 @end
 
@@ -59,6 +61,7 @@ static NSString *kImageCellIdentifier = @"ImageCell";
 {
     self.refreshControl = nil;
     [_articles release];
+    _selectedArticle = nil;
     [self terminateAllPhotoDownloads];
     [_imageDownloadingsList release];
     
@@ -208,6 +211,16 @@ static NSString *kImageCellIdentifier = @"ImageCell";
     
     CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     return size.height + 1.0f; // Add 1.0f for the cell separator height
+}
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    _selectedArticle = _articles[indexPath.row];
+    
+    return indexPath;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -431,6 +444,18 @@ static NSString *kImageCellIdentifier = @"ImageCell";
                 [self startDownloadPhoto:article forIndexPath:indexPath];
             }
         }
+    }
+}
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    if ([[segue destinationViewController] isKindOfClass:[DetailsViewController class]]) {
+        DetailsViewController *detailsViewController = (DetailsViewController *)[segue destinationViewController];
+        detailsViewController.selectedArticle = _selectedArticle;
     }
 }
 
